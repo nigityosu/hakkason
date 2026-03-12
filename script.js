@@ -52,6 +52,27 @@ async function loadBossMemories() {
   bossMemoryStoriesInitialized = true;
 }
 
+// エンディングデータ管理
+let endingsData = [];
+
+// エンディングデータをJSONから読み込む
+async function loadEndingsData() {
+  try {
+    const res = await fetch("寄り道/ed.json");
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    endingsData = Array.isArray(data.endings) ? data.endings : [];
+  } catch (e) {
+    console.error("ed.json の読み込みに失敗しました", e);
+    endingsData = [];
+  }
+}
+
+// IDでエンディングデータを取得するヘルパー
+function getEnding(id) {
+  return endingsData.find((e) => e.id === id) || null;
+}
+
 // 横道イベント初期化
 function initSideMemories() {
   sideMemories = {};
@@ -133,40 +154,26 @@ function setPrompt(text) {
 }
 
 function getEndingText(clearedBy) {
-  // ed.mdの6つのエンディング条件に基づいて分岐
-  
-  // 1. ボスの思い出を百個回収して和解したエンディング
+  let endingId;
   if (state.bossMemories >= 100 && clearedBy === "reconcile") {
-    return "ボスの全ての思い出を辿り、深く理解した主人公。戦わず言葉と心で決着をつけた。二人の歴史は新しい章へ入る。";
+    endingId = 1;
+  } else if (state.bossMemories >= 100 && clearedBy === "battle") {
+    endingId = 6;
+  } else if (state.bossMemories === 0 && clearedBy === "battle") {
+    endingId = 5;
+  } else if (state.bossMemories < 100 && clearedBy === "battle") {
+    endingId = 3;
+  } else if (state.bossMemories < 100 && clearedBy === "reconcile") {
+    endingId = 4;
   }
-  
-  // 2. 主人公の体力がゼロになったエンディング（これはfinishGameOverで処理）
-  // 3. 思い出を集めきれずにボスを倒したエンディング（ボス思い出 < 100 && 戦闘）
-  if (state.bossMemories < 100 && clearedBy === "battle") {
-    if (state.bossMemories === 0) {
-      // 5. 思い出を集めずにボスを倒したエンディング
-      return "ボスの過去を知ることなく、ただ力で圧倒した。勝利は得られたが、何か大切なものが置き去りにされた気がする。";
-    } else {
-      // 3. 思い出を集めきれずにボスを倒したエンディング（1～99個）
-      return `ボスの一部の思い出を知ることで、相手を理解しようとした。だが最後は剣で決着をつけた。未完成の理解が心に長く残る。（ボス思い出: ${state.bossMemories}/100）`;
-    }
+
+  const ending = endingId ? getEnding(endingId) : null;
+  if (ending) {
+    const extra = (endingId === 3 || endingId === 4) ? `（ボス思い出: ${state.bossMemories}/100）` : "";
+    return ending.text + extra;
   }
-  
-  // 6. 思い出を集めきってボスを倒したエンディング（ボス思い出100 && 戦闘）
-  if (state.bossMemories >= 100 && clearedBy === "battle") {
-    return "ボスの全ての思い出を辿り、深く理解した主人公。だが最終的には力で決着をつけた。理解と決裂のはざまで、複雑な感情が残る。";
-  }
-  
-  // 4. 思い出を集めきらずにボスと和解したエンディング（ボス思い出 < 100 && 和解）
-  if (state.bossMemories < 100 && clearedBy === "reconcile") {
-    if (state.bossMemories === 0) {
-      return "ボスの過去に一度も触れることなく、突然和解を求めた。ボスは困惑したが、その勇気を認めた。物語は謎に包まれたまま幕を閉じる。";
-    } else {
-      return `ボスの一部の思い出を知ることで、相手を理解しようとした。不完全な理解のまま、戦わずに和解した。二人の関係は、謎と信頼の上に成り立つ。（ボス思い出: ${state.bossMemories}/100）`;
-    }
-  }
-  
-  // フォールバック（想定外のケース）
+
+  // フォールバック
   const routeTone = clearedBy === "battle" ? "剣を交えて決着をつけた。" : "戦わず言葉で決着をつけた。";
   return `${routeTone} 物語は無事に幕を閉じた。`;
 }
@@ -360,23 +367,23 @@ function clearGame(clearedBy) {
   state.gameOver = true;
   document.body.classList.add("game-over");
   
-  // エンディングのタイトルを設定
-  let titleText = "";
+  // エンディングのタイトルを設定（ed.jsonから取得）
+  let endingId;
   if (state.bossMemories >= 100 && clearedBy === "reconcile") {
-    titleText = "完全なる和解";
-  } else if (state.bossMemories < 100 && clearedBy === "battle") {
-    if (state.bossMemories === 0) {
-      titleText = "思い出なき勝利";
-    } else {
-      titleText = "部分的な理解と決裂";
-    }
+    endingId = 1;
   } else if (state.bossMemories >= 100 && clearedBy === "battle") {
-    titleText = "理解と決裂のはざま";
-  } else if (state.bossMemories < 100 && clearedBy === "reconcile") {
-    titleText = "謎に包まれた和解";
+    endingId = 6;
+  } else if (state.bossMemories === 0 && clearedBy === "battle") {
+    endingId = 5;
+  } else if (state.bossMemories < 100 && clearedBy === "battle") {
+    endingId = 3;
   } else {
-    titleText = clearedBy === "battle" ? "ゲームクリア: ボスを倒した" : "ゲームクリア: ボスと和解した";
+    endingId = 4;
   }
+  const endingEntry = getEnding(endingId);
+  const titleText = endingEntry
+    ? endingEntry.title
+    : (clearedBy === "battle" ? "ゲームクリア: ボスを倒した" : "ゲームクリア: ボスと和解した");
   
   resultTitleEl.textContent = titleText;
   resultTextEl.textContent = getEndingText(clearedBy);
@@ -387,8 +394,9 @@ function clearGame(clearedBy) {
 function finishGameOver() {
   state.gameOver = true;
   document.body.classList.add("game-over");
-  resultTitleEl.textContent = "ゲームオーバー";
-  resultTextEl.textContent = "主人公の体力が尽きた。寄り道の選び方を変えると、別の結末にたどり着ける。";
+  const gameOverEnding = getEnding(2);
+  resultTitleEl.textContent = gameOverEnding ? gameOverEnding.title : "ゲームオーバー";
+  resultTextEl.textContent = gameOverEnding ? gameOverEnding.text : "主人公の体力が尽きた。寄り道の選び方を変えると、別の結末にたどり着ける。";
   setPrompt("力尽きた。resultを確認して、やり直せる。");
   renderAll();
 }
@@ -420,7 +428,7 @@ resultRestartBtn.addEventListener("click", resetGame);
 
 // JSON読み込みの成否に関わらず、必ずゲームを開始する
 async function initializeGame() {
-  await loadBossMemories();
+  await Promise.all([loadBossMemories(), loadEndingsData()]);
   resetGame();
 }
 
