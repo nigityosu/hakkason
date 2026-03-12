@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>あなたは何を望むのか</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="game-shell">
+    <header class="hero">
+      <h1>あなたは何を望むのか</h1>
+      <p>まっすぐ進めば戦える。寄り道すれば、結末が変わる。<br>
+        どんな結末を迎えるかはあなた次第
+      </p>
+    </header>
+
+    <section class="status-panel">
+      <div>主人公HP:
+        <div class="hp-bar-wrap">
+          <div class="hp-bar-bg">
+            <div class="hp-bar" id="hp-bar"></div>
+          </div>
+          <span id="hp"></span>
+        </div>
+      </div>
+      <div>現在の距離: <strong id="distance"></strong></div>
+      <div>主人公の思い出: <strong id="hero-memory-count"></strong></div>
+      <div>ボスの思い出: <strong id="boss-memory-count"></strong></div>
+    </section>
+
+    <section class="story-panel">
+      <h2>選択</h2>
+      <p id="prompt" class="prompt" aria-live="polite"></p>
+    </section>
+
+    <section class="control-panel">
+      <div class="button-row">
+        <button id="forward-btn">進む</button>
+        <button id="fight-btn" disabled>ボスと戦う</button>
+        <button id="reconcile-btn" disabled>ボスと和解する</button>
+        <button id="restart-btn">やり直す</button>
+      </div>
+      <div id="memory-buttons" class="button-row"></div>
+    </section>
+      <section class="boss-story-list-panel" id="boss-story-list-panel">
+        <h2>ボスの思い出ストーリー一覧（上限なし）</h2>
+        <ul id="boss-story-list" class="boss-story-list"></ul>
+      </section>
+
+    <section class="result-panel" id="result-panel" hidden>
+      <h2>result</h2>
+      <p id="result-title" class="result-title"></p>
+      <p id="result-text"></p>
+      <dl class="result-summary">
+        <div>
+          <dt>主人公のHP</dt>
+          <dd id="result-hp"></dd>
+        </div>
+        <div>
+          <dt>主人公の思い出</dt>
+          <dd id="result-hero-memory"></dd>
+        </div>
+        <div>
+          <dt>ボスの思い出</dt>
+          <dd id="result-boss-memory"></dd>
+        </div>
+      </dl>
+      <button id="result-restart-btn" class="result-restart-btn">もう一度プレイ</button>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

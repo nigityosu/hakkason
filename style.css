@@ -1,0 +1,232 @@
+.hp-bar-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.hp-bar-bg {
+  width: 120px;
+  height: 18px;
+  background: #eee;
+  border-radius: 8px;
+  border: 1px solid #bbb;
+  position: relative;
+  overflow: hidden;
+}
+.hp-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #3ec064, #2f7db8);
+  border-radius: 8px;
+  transition: width 0.2s;
+  width: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+:root {
+  --bg-top: #f6f2e8;
+  --bg-bottom: #d7e7f5;
+  --ink: #222222;
+  --card: #fffdf8;
+  --line: #473f3f;
+  --hero-memory: #2f7db8;
+  --boss-memory: #bf3f3f;
+  --boss: #d3982f;
+  --main: #3f6a3f;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  color: var(--ink);
+  font-family: "Yu Gothic", "Hiragino Sans", sans-serif;
+  background: linear-gradient(165deg, var(--bg-top), var(--bg-bottom));
+  min-height: 100vh;
+}
+
+.game-shell {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.hero {
+  background: rgba(255, 255, 255, 0.65);
+  border: 2px solid var(--line);
+  border-radius: 14px;
+  padding: 14px 18px;
+}
+
+.hero h1 {
+  margin: 0 0 6px;
+  font-size: clamp(1.4rem, 3vw, 2rem);
+}
+
+.story-panel,
+.control-panel {
+  margin-top: 14px;
+  background: var(--card);
+  border: 2px solid var(--line);
+  border-radius: 14px;
+  padding: 12px;
+}
+
+.story-panel h2 {
+  margin-top: 0;
+}
+
+/* result画面は画面中央のモーダル表示 */
+body.game-over {
+  overflow: hidden;
+}
+
+body.game-over::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 999;
+}
+
+.result-panel {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 500px;
+  max-height: 80vh;
+  background: var(--card);
+  border: 2px solid var(--line);
+  border-radius: 14px;
+  padding: 24px;
+  z-index: 1000;
+  overflow-y: auto;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.result-panel h2 {
+  margin-top: 0;
+}
+
+.prompt {
+  margin: 0;
+  min-height: 3.6em;
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+button {
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+button:hover:enabled {
+  transform: translateY(-1px);
+}
+
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.result-title {
+  margin: 0 0 8px;
+  font-weight: 700;
+}
+
+.result-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+  margin: 14px 0 0;
+}
+
+.result-summary div {
+  background: #f5f1e8;
+  border: 1px solid #bdb3a5;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.result-summary dt {
+  font-size: 0.9rem;
+}
+
+.result-summary dd {
+  margin: 6px 0 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.result-restart-btn {
+  margin-top: 16px;
+  width: 100%;
+  background: var(--main);
+  color: white;
+  border: 2px solid var(--main);
+  padding: 12px;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.result-restart-btn:hover {
+  background: #2d5a2d;
+  transform: translateY(-2px);
+}
+
+.boss-story-list-panel {
+  margin-top: 14px;
+  background: var(--card);
+  border: 2px solid var(--line);
+  border-radius: 14px;
+  padding: 12px;
+}
+.boss-story-list-panel h2 {
+  margin-top: 0;
+}
+.boss-story-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 260px;
+  overflow-y: auto;
+}
+.boss-story-list li {
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+  line-height: 1.5;
+}
+.boss-story-list li:last-child {
+  border-bottom: none;
+}
+
+@media (max-width: 640px) {
+  .game-shell {
+    padding: 14px;
+  }
+
+  .button-row {
+    flex-direction: column;
+  }
+
+  button {
+    width: 100%;
+  }
+}
