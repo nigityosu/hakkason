@@ -315,7 +315,6 @@ const resultHpEl = document.getElementById("result-hp");
 const resultHeroMemoryEl = document.getElementById("result-hero-memory");
 const resultBossMemoryEl = document.getElementById("result-boss-memory");
 const resultUserNameEl = document.getElementById("result-user-name");
-const resultUserPasswordEl = document.getElementById("result-user-password");
 const resultRemainingEdEl = document.getElementById("result-remaining-ed");
 
 const authOverlayEl = document.getElementById("auth-overlay");
@@ -331,6 +330,7 @@ const fightBtn = document.getElementById("fight-btn");
 const reconcileBtn = document.getElementById("reconcile-btn");
 const restartBtn = document.getElementById("restart-btn");
 const resultRestartBtn = document.getElementById("result-restart-btn");
+const resultLogoutBtn = document.getElementById("result-logout-btn");
 const memoryButtonsEl = document.getElementById("memory-buttons");
 
 function setPrompt(text) {
@@ -403,11 +403,9 @@ function renderResult() {
   resultBossMemoryEl.textContent = `${state.bossMemories}個`;
   if (currentUser) {
     resultUserNameEl.textContent = currentUser.name;
-    resultUserPasswordEl.textContent = currentUser.password;
     resultRemainingEdEl.textContent = `${getRemainingEdCount(currentUser.name)}個`;
   } else {
     resultUserNameEl.textContent = "-";
-    resultUserPasswordEl.textContent = "-";
     resultRemainingEdEl.textContent = "-";
   }
 }
@@ -463,6 +461,20 @@ function setAuthMode(mode) {
 
 function hideAuthOverlay() {
   authOverlayEl.style.display = "none";
+}
+
+function showAuthOverlay() {
+  authOverlayEl.style.display = "grid";
+}
+
+function logout() {
+  currentUser = null;
+  userNameInputEl.value = "";
+  userPasswordInputEl.value = "";
+  setAuthMode("new");
+  showAuthOverlay();
+  resetGame();
+  setPrompt("ログアウトしました。新規または続きから開始してください。");
 }
 
 function handleAuthSubmit() {
@@ -686,11 +698,9 @@ function resetGame() {
 
   if (currentUser) {
     resultUserNameEl.textContent = currentUser.name;
-    resultUserPasswordEl.textContent = currentUser.password;
     resultRemainingEdEl.textContent = `${getRemainingEdCount(currentUser.name)}個`;
   } else {
     resultUserNameEl.textContent = "-";
-    resultUserPasswordEl.textContent = "-";
     resultRemainingEdEl.textContent = "-";
   }
 
@@ -702,6 +712,7 @@ fightBtn.addEventListener("click", fightBoss);
 reconcileBtn.addEventListener("click", reconcileBoss);
 restartBtn.addEventListener("click", resetGame);
 resultRestartBtn.addEventListener("click", resetGame);
+resultLogoutBtn.addEventListener("click", logout);
 newUserBtn.addEventListener("click", () => setAuthMode("new"));
 continueUserBtn.addEventListener("click", () => setAuthMode("continue"));
 authSubmitBtn.addEventListener("click", handleAuthSubmit);

@@ -245,6 +245,22 @@ button:disabled {
   transform: translateY(-2px);
 }
 
+.result-logout-btn {
+  margin-top: 10px;
+  width: 100%;
+  background: #fff;
+  color: var(--ink);
+  border: 2px solid var(--line);
+  padding: 12px;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.result-logout-btn:hover {
+  background: #f1ebdd;
+  transform: translateY(-2px);
+}
+
 .boss-story-list-panel {
   margin-top: 14px;
   background: var(--card);
