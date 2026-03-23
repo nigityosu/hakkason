@@ -46,6 +46,60 @@ body {
   min-height: 100vh;
 }
 
+.auth-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: grid;
+  place-items: center;
+  z-index: 1200;
+  padding: 12px;
+}
+
+.auth-panel {
+  width: min(560px, 96vw);
+  background: var(--card);
+  border: 2px solid var(--line);
+  border-radius: 14px;
+  padding: 18px;
+}
+
+.auth-panel h2 {
+  margin: 0 0 8px;
+}
+
+.auth-label {
+  display: block;
+  margin-top: 10px;
+  font-weight: 700;
+}
+
+.auth-input {
+  width: 100%;
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  padding: 10px;
+  font-size: 1rem;
+  margin-top: 4px;
+}
+
+.auth-submit-btn {
+  width: 100%;
+  margin-top: 12px;
+  background: var(--main);
+  color: #fff;
+  border-color: var(--main);
+  padding: 10px;
+  font-size: 1rem;
+}
+
+.auth-message {
+  min-height: 1.5em;
+  margin: 10px 0 0;
+  color: #8b2525;
+  font-weight: 700;
+}
+
 .game-shell {
   max-width: 980px;
   margin: 0 auto;

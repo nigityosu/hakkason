@@ -7,6 +7,23 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <section class="auth-overlay" id="auth-overlay">
+    <div class="auth-panel">
+      <h2>プレイヤー情報</h2>
+      <p>新規または続きからを選んで、名前とパスワードを入力してください。</p>
+      <div class="button-row" id="auth-mode-row">
+        <button id="new-user-btn" type="button">新規</button>
+        <button id="continue-user-btn" type="button">続きから</button>
+      </div>
+      <label class="auth-label" for="user-name-input">user名</label>
+      <input id="user-name-input" class="auth-input" type="text" maxlength="30" autocomplete="username">
+      <label class="auth-label" for="user-password-input">パスワード</label>
+      <input id="user-password-input" class="auth-input" type="password" maxlength="40" autocomplete="current-password">
+      <button id="auth-submit-btn" type="button" class="auth-submit-btn">開始する</button>
+      <p id="auth-message" class="auth-message" aria-live="polite"></p>
+    </div>
+  </section>
+
   <main class="game-shell">
     <header class="hero">
       <h1>あなたは何を望むのか</h1>
@@ -64,6 +81,18 @@
         <div>
           <dt>ボスの思い出</dt>
           <dd id="result-boss-memory"></dd>
+        </div>
+        <div>
+          <dt>user名</dt>
+          <dd id="result-user-name"></dd>
+        </div>
+        <div>
+          <dt>パスワード</dt>
+          <dd id="result-user-password"></dd>
+        </div>
+        <div>
+          <dt>残りED数</dt>
+          <dd id="result-remaining-ed"></dd>
         </div>
       </dl>
       <button id="result-restart-btn" class="result-restart-btn">もう一度プレイ</button>
