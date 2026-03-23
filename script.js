@@ -61,6 +61,25 @@ function normalizeEndings(data) {
   );
 }
 
+async function fetchJsonWithFallback(paths) {
+  let lastError = null;
+
+  for (const path of paths) {
+    try {
+      const url = new URL(path, window.location.href);
+      const res = await fetch(url.href, { cache: "no-store" });
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status} @ ${url.href}`);
+      }
+      return await res.json();
+    } catch (e) {
+      lastError = e;
+    }
+  }
+
+  throw lastError || new Error("JSON の読み込みに失敗しました");
+}
+
 // ボスの思い出ストーリーをJSONから読み込む（初回のみ）
 async function loadBossMemories() {
   if (bossMemoryStoriesInitialized) return;
@@ -198,9 +217,10 @@ function persistCurrentProgress() {
 // エンディングデータをJSONから読み込む
 async function loadEndingsData() {
   try {
-    const res = await fetch("寄り道/ed.json");
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
+    const data = await fetchJsonWithFallback([
+      "data/endings.json",
+      encodeURI("寄り道/ed.json"),
+    ]);
     endingsData = normalizeEndings(data);
   } catch (e) {
     console.error("ed.json の読み込みに失敗しました", e);
